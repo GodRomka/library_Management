@@ -5,7 +5,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
     return (
         <nav className="w-full">
-            <div className="bg-white bg-opacity-65 font-Poppins flex justify-between items-center p-5 sticky top-0">
+            <div className="bg-teal-100 bg-opacity-65 font-Poppins flex justify-between items-center p-5 sticky top-0">
     
                     <h2 className="font-Oswald font-base text-2xl text-black">eBook</h2>
                     <ul className="hidden md:flex items-center gap-5 text-medium font-base cursor-pointer">

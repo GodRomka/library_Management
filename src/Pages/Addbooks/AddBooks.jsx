@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { addBook } from '../../utils/bookSlice';
 import { nanoid } from 'nanoid';
-
 
 const AddBooks = () => {
   const [error, setError] = useState('');
   const [bookData, setBookData] = useState({
     title: '',
     author: '',
-    type:'',
+    type: '',
     image: null,
     description: '',
-  })
+  });
+
   const handleChange = (event) => {
     const { name, value, files } = event.target;
     setBookData({
       ...bookData,
       [name]: files ? files[0] : value,
-    })
-  }
+    });
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,55 +29,107 @@ const AddBooks = () => {
     event.preventDefault();
     const { title, author, image, description } = bookData;
 
-    if(!title || !author || !image || !description){
-      setError('Please ensure all the field are entered');
+    if (!title || !author || !image || !description) {
+      setError('Please ensure all the fields are entered');
       return;
     }
-    console.log(bookData)
 
     const newBooks = {
-      id:nanoid(),
+      id: nanoid(),
       title: bookData.title,
-      img: bookData.image,
-      type:bookData.type,
+      img: URL.createObjectURL(bookData.image),
+      type: bookData.type,
       author: bookData.author,
       description: bookData.description,
-      img: URL.createObjectURL(bookData.image),
-      isNew:true,
-    }
-    console.log(newBooks);
+      isNew: true,
+    };
 
     dispatch(addBook(newBooks));
     navigate('/browsebook');
-  }
+  };
 
   return (
-    <form className='md:w-1/2 w-full font-Poppins p-12 mx-auto' onSubmit={handleSubmit}>
-      <h2 className='font-semibold text-2xl mb-4 text-center'>Add new Book</h2>
-      <div className='mb-4'>
-        <label className='font-medium text-lg text-gray-600 mb-2'>Title</label>
-        <input type="text" name='title' value={bookData.title} onChange={handleChange} placeholder='Enter a Title of Book' className='w-full h-12 pl-2 pr-5 border-2 border-black outline-none' />
-      </div>
-      <div className='mb-4'>
-        <label className='font-medium text-lg text-gray-600 mb-2'>Author</label>
-        <input type="text" name='author' value={bookData.author} onChange={handleChange} placeholder='Enter a Author' className='w-full h-12 pl-2 pr-5 border-2 border-black outline-none' />
-      </div>
-      <div className='mb-4'>
-        <label className='font-medium text-lg text-gray-600 mb-2'>Book Type</label>
-        <input type="text" name='type' value={bookData.type} onChange={handleChange} placeholder='Enter a book type eg: fantacy, Non-Fiction, crime, fiction, Science, ' className='w-full h-12 pl-2 pr-5 border-2 border-black outline-none' />
-      </div>
-      <div className='mb-4'>
-        <label className='font-medium text-lg text-gray-600 mb-2'>Description</label>
-        <textarea type="text" name='description' value={bookData.description} onChange={handleChange} placeholder='Enter a description' className='w-full h-12 pl-2 pr-5 border-2 border-black outline-none' rows='5'></textarea>
-      </div>
-      <div className='mb-4 flex gap-4'>
-        <label className='font-medium text-lg text-gray-600 mb-2'>Upload a Image</label>
-        <input type="file" name='image' accept='image/*' onChange={handleChange} placeholder='Choose a Image' className='outline-none' />
-      </div>
-      {error && <p className='font-medium text-red-500 text-base mb-4'>{error}</p>}
-      <button type='submit' className='px-6 py-2 bg-black text-white font-semibold'>Add book</button>
-    </form>
-  )
-}
+      <section className="bg-white min-h-screen p-5">
+        <form
+            className="md:w-1/2 w-full font-Poppins p-12 mx-auto bg-cover bg-center bg-no-repeat relative rounded-lg shadow-md"
+            onSubmit={handleSubmit}
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb727c8e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`, // Replace with your background image URL
+            }}
+        >
+          {/* Semi-transparent overlay for better text readability */}
+          <div className="absolute inset-0 bg-teal-100 bg-opacity-50 rounded-lg z-0"></div>
 
-export default AddBooks
+          {/* Content with higher z-index to appear above the overlay */}
+          <div className="relative z-10">
+            <h2 className="font-semibold text-2xl mb-4 text-center text-black">Add new Book</h2>
+            <div className="mb-4">
+              <label className="font-medium text-lg text-black mb-2 block">Title</label>
+              <input
+                  type="text"
+                  name="title"
+                  value={bookData.title}
+                  onChange={handleChange}
+                  placeholder="Enter a Title of Book"
+                  className="w-full h-12 pl-2 pr-5 border-2 border-black outline-none rounded-md bg-white bg-opacity-90"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="font-medium text-lg text-black mb-2 block">Author</label>
+              <input
+                  type="text"
+                  name="author"
+                  value={bookData.author}
+                  onChange={handleChange}
+                  placeholder="Enter an Author"
+                  className="w-full h-12 pl-2 pr-5 border-2 border-black outline-none rounded-md bg-white bg-opacity-90"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="font-medium text-lg text-black mb-2 block">Book Type</label>
+              <input
+                  type="text"
+                  name="type"
+                  value={bookData.type}
+                  onChange={handleChange}
+                  placeholder="Enter a book type eg: fantasy, Non-Fiction, crime, fiction, Science"
+                  className="w-full h-12 pl-2 pr-5 border-2 border-black outline-none rounded-md bg-white bg-opacity-90"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="font-medium text-lg text-black mb-2 block">Description</label>
+              <textarea
+                  type="text"
+                  name="description"
+                  value={bookData.description}
+                  onChange={handleChange}
+                  placeholder="Enter a description"
+                  className="w-full h-24 pl-2 pr-5 border-2 border-black outline-none rounded-md bg-white bg-opacity-90"
+                  rows="5"
+              ></textarea>
+            </div>
+            <div className="mb-4 flex gap-4">
+              <label className="font-medium text-lg text-black mb-2">Upload an Image</label>
+              <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleChange}
+                  placeholder="Choose an Image"
+                  className="outline-none text-black"
+              />
+            </div>
+            {error && <p className="font-medium text-red-400 text-base mb-4">{error}</p>}
+            <button
+                type="submit"
+                className="px-6 py-2 bg-black text-white font-semibold rounded-md hover:bg-gray-800"
+            >
+              Add book
+            </button>
+          </div>
+        </form>
+      </section>
+  );
+};
+
+export default AddBooks;
