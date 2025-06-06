@@ -46,7 +46,7 @@ const Booksdata = ({ title, inputValue }) => {
 
             {filterData.length === 0 && (
                 <div className="mt-6 text-center text-gray-500 text-sm">
-                    Книг не знайдено
+                    No books found
                 </div>
             )}
         </div>

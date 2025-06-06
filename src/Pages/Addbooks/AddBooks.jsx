@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { addBook } from '../../utils/bookSlice';
 import { nanoid } from 'nanoid';
 
@@ -14,6 +14,9 @@ const AddBooks = () => {
     description: '',
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     const { name, value, files } = event.target;
     setBookData({
@@ -22,10 +25,15 @@ const AddBooks = () => {
     });
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const toBase64 = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { title, author, image, description } = bookData;
 
@@ -34,10 +42,12 @@ const AddBooks = () => {
       return;
     }
 
+    const base64Image = await toBase64(image);
+
     const newBooks = {
       id: nanoid(),
       title: bookData.title,
-      img: URL.createObjectURL(bookData.image),
+      img: base64Image,
       type: bookData.type,
       author: bookData.author,
       description: bookData.description,
@@ -54,13 +64,11 @@ const AddBooks = () => {
             className="md:w-1/2 w-full font-Poppins p-12 mx-auto bg-cover bg-center bg-no-repeat relative rounded-lg shadow-md"
             onSubmit={handleSubmit}
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb727c8e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`, // Replace with your background image URL
+              backgroundImage: `url('https://images.unsplash.com/photo-1507842217343-583bb727c8e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')`,
             }}
         >
-          {/* Semi-transparent overlay for better text readability */}
           <div className="absolute inset-0 bg-teal-100 bg-opacity-50 rounded-lg z-0"></div>
 
-          {/* Content with higher z-index to appear above the overlay */}
           <div className="relative z-10">
             <h2 className="font-semibold text-2xl mb-4 text-center text-black">Add new Book</h2>
             <div className="mb-4">
@@ -99,7 +107,6 @@ const AddBooks = () => {
             <div className="mb-4">
               <label className="font-medium text-lg text-black mb-2 block">Description</label>
               <textarea
-                  type="text"
                   name="description"
                   value={bookData.description}
                   onChange={handleChange}
@@ -115,7 +122,6 @@ const AddBooks = () => {
                   name="image"
                   accept="image/*"
                   onChange={handleChange}
-                  placeholder="Choose an Image"
                   className="outline-none text-black"
               />
             </div>

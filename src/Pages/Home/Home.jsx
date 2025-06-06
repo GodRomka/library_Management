@@ -24,7 +24,7 @@ const Home = () => {
 
             <Categories />
             <Booksdata />
-            <Footer />
+
         </div>
     );
 };
